@@ -1,9 +1,19 @@
 package com.mercadolibre.dojos;
 
+import java.util.ArrayList;
+
 /**
  * Created by mkamien on 1/24/18.
  */
 public class TripCalculator {
+
+    ArrayList<TripCostRule> tripCostRuleList;
+
+    public TripCalculator() {
+        tripCostRuleList = new ArrayList<TripCostRule>();
+        tripCostRuleList.add(new OneWeekBeforeEarningTripCostRule());
+        tripCostRuleList.add(new TwoWeeksBeforeAndOneWeekAfterEarningTripCostRule());
+    }
 
     public Price calculate(Trip trip, TripDate inquiryDate) {
         Integer daysBetweenTodayAndTripDate = trip.daysToDeparture(inquiryDate);
@@ -14,12 +24,11 @@ public class TripCalculator {
     }
 
     private Price calculateEarning(Price tripCost, Integer daysBetweenTodayAndTripDate) {
-        if(daysBetweenTodayAndTripDate <= 7){
-            Price oneWeekBeforeEarning = new Price(100);
-            return tripCost.addValue( oneWeekBeforeEarning );
-        } else if(daysBetweenTodayAndTripDate <= 15){
-            return tripCost.addPercentage(10);
+
+        for( TripCostRule tripCostRule : tripCostRuleList ) {
+            tripCost = tripCostRule.addPromotionIfApply(daysBetweenTodayAndTripDate, tripCost);
         }
-        return new Price(0);
+
+        return tripCost;
     }
 }
