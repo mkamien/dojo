@@ -6,7 +6,7 @@ package com.mercadolibre.dojos;
 public class TwoWeeksBeforeAndOneWeekAfterEarningTripCostRule extends TripCostRule{
 
     @Override
-    protected Boolean apply(int daysBetweenTodayAndTripDate) {
+    protected Boolean apply(Integer daysBetweenTodayAndTripDate) {
         return daysBetweenTodayAndTripDate <= 15 && daysBetweenTodayAndTripDate > 7;
     }
 
