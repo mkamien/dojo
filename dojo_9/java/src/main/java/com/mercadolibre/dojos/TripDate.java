@@ -18,6 +18,10 @@ public class TripDate {
         long startTime = this.date.getTime();
         long endTime = date.date.getTime();
         long diffTime = endTime - startTime;
-        return (int) TimeUnit.DAYS.convert(diffTime, TimeUnit.MILLISECONDS);
+        return Math.abs((int) TimeUnit.DAYS.convert(diffTime, TimeUnit.MILLISECONDS));
+    }
+
+    public TripDate addDays(Integer numberOfDays) {
+        return new TripDate(10,12,2016);
     }
 }

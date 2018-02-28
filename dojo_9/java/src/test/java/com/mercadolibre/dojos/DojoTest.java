@@ -66,4 +66,40 @@ public class DojoTest {
         Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
 
     }
+
+    @Test
+    public void buyingTicket90DaysBeforeDepartureAndAvailabilityIs10PercentThenThePriceIncrements50Percent(){
+        Place initialPlace = new Place("Buenos Aires");
+        Place finalPlace = new Place("Bahia Blanca");
+        Price initialPrice = new Price(100);
+        Bus bus = new Bus( initialPlace, finalPlace , initialPrice);
+
+        TripDate tripDate = new TripDate(1,1,2017);
+        Trip trip = new Trip(tripDate, bus);
+
+        AvailabilityService availabilityService = new FakeAvailabilityService(10);
+
+        TripCalculator calculator = new TripCalculator(availabilityService);
+        TripDate todayDate = tripDate.addDays(90);
+        Price finalPrice = new Price(150);
+        Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
+    }
+
+    @Test
+    public void buyingTicket90DaysBeforeDepartureAndAvailabilityIsMoreThan10PercentThenThePriceDecrements20Percent(){
+        Place initialPlace = new Place("Buenos Aires");
+        Place finalPlace = new Place("Bahia Blanca");
+        Price initialPrice = new Price(100);
+        Bus bus = new Bus( initialPlace, finalPlace , initialPrice);
+
+        TripDate tripDate = new TripDate(1,1,2017);
+        Trip trip = new Trip(tripDate, bus);
+
+        AvailabilityService availabilityService = new FakeAvailabilityService(22);
+
+        TripCalculator calculator = new TripCalculator(availabilityService);
+        TripDate todayDate = tripDate.addDays(90);
+        Price finalPrice = new Price(80);
+        Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
+    }
 }
