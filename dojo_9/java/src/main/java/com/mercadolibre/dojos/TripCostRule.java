@@ -1,9 +1,13 @@
 package com.mercadolibre.dojos;
 
 /**
- * Created by mkamien on 2/7/18.
+ * Created by esomoza on 2/7/18.
  */
-public interface TripCostRule {
+public abstract class TripCostRule {
+    protected abstract Boolean apply(Integer daysBetweenTodayAndTripDate);
+    protected abstract Price addPromotion(Price tripCost);
 
-    Price earning(Integer daysBetweenTodayAndTrip, Price tripCost);
+    public Price addPromotionIfApply(Integer daysBetweenTodayAndTripDate, Price tripCost) {
+        return apply(daysBetweenTodayAndTripDate) ? addPromotion(tripCost) : tripCost;
+    }
 }

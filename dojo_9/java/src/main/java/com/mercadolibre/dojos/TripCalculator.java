@@ -1,32 +1,33 @@
 package com.mercadolibre.dojos;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mkamien on 1/24/18.
  */
 public class TripCalculator {
 
-    List<TripCostRule> earningRules;
-    AvailabilityService availabilityService;
+    ArrayList<TripCostRule> tripCostRuleList;
+    ApiAvailabilityService apiAvailabilityService;
 
     public TripCalculator() {
-        this.availabilityService = new NoneAvailabilityService();
-        this.init(this.availabilityService);
+        this.apiAvailabilityService = new RealApiAvailabilityService();
+        init();
     }
 
-    public TripCalculator(AvailabilityService availabilityService) {
-        this.availabilityService = availabilityService;
-        this.init(this.availabilityService);
+    public TripCalculator(ApiAvailabilityService apiAvailabilityService) {
+        this.apiAvailabilityService = apiAvailabilityService;
+        init();
     }
 
-    private void init(AvailabilityService availabilityService){
-        this.earningRules = new ArrayList<TripCostRule>();
-        this.earningRules.add( new OneWeekBeforeRule() );
-        this.earningRules.add( new TwoWeekBeforeRule() );
-        this.earningRules.add( new NinetyDaysBeforeAndLessThan10PercentOfAvailabilityRule(availabilityService) );
-        this.earningRules.add( new NinetyDaysBeforeAndMoreThan10PercentOfAvailabilityRule(availabilityService) );
+    private void init() {
+        tripCostRuleList = new ArrayList<TripCostRule>();
+        tripCostRuleList.add(new OneWeekBeforeEarningTripCostRule());
+        tripCostRuleList.add(new TwoWeeksBeforeAndOneWeekAfterEarningTripCostRule());
+        tripCostRuleList.add(new ThreeMonthsBeforeAndTwoWeeksAfterAndLessThanTenPercentAvailabilityTripCostRule(this.apiAvailabilityService));
+        tripCostRuleList.add(new ThreeMonthsBeforeAndTwoWeeksAfterAndMoreThanTenPercentAvailabilityTripCostRule(this.apiAvailabilityService));
+        tripCostRuleList.add(new SixMonthsBeforeAndThreeMonthsAfterAndMoreThanEightyPercentAvailabilityTripCostRule(this.apiAvailabilityService));
+        tripCostRuleList.add(new SixMonthsBeforeAndThreeMonthsAfterAndLessThanEightyPercentAvailabilityTripCostRule(this.apiAvailabilityService));
     }
 
     public Price calculate(Trip trip, TripDate inquiryDate) {
@@ -38,12 +39,11 @@ public class TripCalculator {
     }
 
     private Price calculateEarning(Price tripCost, Integer daysBetweenTodayAndTripDate) {
-        Price earningPrice = tripCost;
 
-        for (TripCostRule tripCostRule: this.earningRules) {
-            earningPrice = tripCostRule.earning(daysBetweenTodayAndTripDate, earningPrice);
+        for( TripCostRule tripCostRule : tripCostRuleList ) {
+            tripCost = tripCostRule.addPromotionIfApply(daysBetweenTodayAndTripDate, tripCost);
         }
 
-        return earningPrice;
+        return tripCost;
     }
 }

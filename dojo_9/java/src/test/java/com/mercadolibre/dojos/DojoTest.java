@@ -68,38 +68,78 @@ public class DojoTest {
     }
 
     @Test
-    public void buyingTicket90DaysBeforeDepartureAndAvailabilityIs10PercentThenThePriceIncrements50Percent(){
+    public void buyingTicket3MonthBeforeDepartureWith10PercentAvailabilityMustReturnFiftyPercentMore(){
         Place initialPlace = new Place("Buenos Aires");
         Place finalPlace = new Place("Bahia Blanca");
         Price initialPrice = new Price(100);
         Bus bus = new Bus( initialPlace, finalPlace , initialPrice);
 
-        TripDate tripDate = new TripDate(1,1,2017);
+        TripDate tripDate = new TripDate(15,04,2018);
         Trip trip = new Trip(tripDate, bus);
 
-        AvailabilityService availabilityService = new FakeAvailabilityService(10);
+        ApiAvailabilityService apiAvailabilityService = new FakeApiAvailabilityService(10);
 
-        TripCalculator calculator = new TripCalculator(availabilityService);
-        TripDate todayDate = tripDate.addDays(90);
+        TripCalculator calculator = new TripCalculator(apiAvailabilityService);
+        TripDate todayDate = new TripDate(01,02,2018);
         Price finalPrice = new Price(150);
         Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
+
     }
 
     @Test
-    public void buyingTicket90DaysBeforeDepartureAndAvailabilityIsMoreThan10PercentThenThePriceDecrements20Percent(){
+    public void buyingTicket3MonthBeforeDepartureWith40PercentAvailabilityMustReturnTwentyPercentLess(){
         Place initialPlace = new Place("Buenos Aires");
         Place finalPlace = new Place("Bahia Blanca");
         Price initialPrice = new Price(100);
         Bus bus = new Bus( initialPlace, finalPlace , initialPrice);
 
-        TripDate tripDate = new TripDate(1,1,2017);
+        TripDate tripDate = new TripDate(15,04,2018);
         Trip trip = new Trip(tripDate, bus);
 
-        AvailabilityService availabilityService = new FakeAvailabilityService(22);
+        ApiAvailabilityService apiAvailabilityService = new FakeApiAvailabilityService(40);
 
-        TripCalculator calculator = new TripCalculator(availabilityService);
-        TripDate todayDate = tripDate.addDays(90);
+        TripCalculator calculator = new TripCalculator(apiAvailabilityService);
+        TripDate todayDate = new TripDate(01,02,2018);
         Price finalPrice = new Price(80);
         Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
+
+    }
+
+    @Test
+    public void buyingTicket6MonthBeforeDepartureWith80PercentAvailabilityMustReturnTwentyPercentMore(){
+        Place initialPlace = new Place("Buenos Aires");
+        Place finalPlace = new Place("Bahia Blanca");
+        Price initialPrice = new Price(100);
+        Bus bus = new Bus( initialPlace, finalPlace , initialPrice);
+
+        TripDate tripDate = new TripDate(15,06,2018);
+        Trip trip = new Trip(tripDate, bus);
+
+        ApiAvailabilityService apiAvailabilityService = new FakeApiAvailabilityService(80);
+
+        TripCalculator calculator = new TripCalculator(apiAvailabilityService);
+        TripDate todayDate = new TripDate(01,02,2018);
+        Price finalPrice = new Price(120);
+        Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
+
+    }
+
+    @Test
+    public void buyingTicket6MonthBeforeDepartureWithLessThan80PercentAvailabilityMustReturnTenPercentLess(){
+        Place initialPlace = new Place("Buenos Aires");
+        Place finalPlace = new Place("Bahia Blanca");
+        Price initialPrice = new Price(100);
+        Bus bus = new Bus( initialPlace, finalPlace , initialPrice);
+
+        TripDate tripDate = new TripDate(15,06,2018);
+        Trip trip = new Trip(tripDate, bus);
+
+        ApiAvailabilityService apiAvailabilityService = new FakeApiAvailabilityService(50);
+
+        TripCalculator calculator = new TripCalculator(apiAvailabilityService);
+        TripDate todayDate = new TripDate(01,02,2018);
+        Price finalPrice = new Price(90);
+        Assert.assertTrue( calculator.calculate(trip, todayDate).equals(finalPrice) );
+
     }
 }
