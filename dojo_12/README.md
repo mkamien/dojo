@@ -1,5 +1,4 @@
 ### Asignación de aulas
-
 En la Universidad de la Matanza, se dispone de un lugar llamado CAU (Centro Atención Unificado), el cual se encarga de asignar aulas y laboratorios bajo solicitud de los docentes. Dada una solicitud, debe devolverse un aula y una etiqueta, que indique que aula fue asignada y permita pegarse en la puerta de la misma (Ej: "Aula: Lab B").
 
 - Dado un conjunto de Aulas disponibles, se solicita una de ellas con capacidad para al menos 10 personas. 
@@ -7,6 +6,15 @@ Ej:  [{nombre:”Lab A”, capacidad:5},{nombre:”Lab B”, capacidad:15}]   ->
 
 -  Dado el mismo listado, se solicita un aula para 30 personas. Se espera como respuesta: “No hay aula disponible”
 Ej:  [{nombre:”Lab A”, capacidad:5},{nombre:”Lab B”, capacidad:15}]   -> “No hay aula disponible” 
+
+- La gente de arquitectura necesita además de capacidad en el aula, que la misma cumpla con cierta cantidad de metros cuadrados para poder exponer sus maquetas.
+Ej:  [{nombre:”Lab A”, capacidad:5, m2:’10},{nombre:”Lab B”, capacidad:15, m2:20}, {nombre:”Lab C”, capacidad:15, m2:50}]   -> capacidad 10, 30m2 -> "Aula: Lab C"
+
+- Ciertas materias pueden solicitar que el aula que necesiten, disponga de cierta cantidad de computadoras. Dicha solicitud, al igual que los metros cuadrados son opcionales. 
+
+Ej:  [{nombre:”Lab A”, capacidad:5, m2:’10},{nombre:”Lab B”, capacidad:15, m2:20}, {nombre:”Lab C”, capacidad:15, m2:50}{nombre:”Lab D”, capacidad:15, m2:50, posee computadoras}]   -> capacidad 10, 30m2 , y que posea computadoras-> "Aula: Lab D"
+
+-  Dado el aumento de alumnos no videntes en la universidad, se desea que las etiquetas se impriman en braille.
 
 
 ### Metodología
